@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مقالات وخواطر</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&amp;family=IBM+Plex+Sans+Arabic:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3eee3;--ink:#1c2340;--mute:#6a6559;--line:#d8cfbb;--accent:#7a2233;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14161f;--ink:#ece4d2;--mute:#a49d8c;--line:#2c2f3d;--accent:#d9a95b}}
+:root[data-theme="dark"]{--bg:#14161f;--ink:#ece4d2;--mute:#a49d8c;--line:#2c2f3d;--accent:#d9a95b}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Amiri","Geeza Pro",serif;font-size:1.35rem;line-height:2.1}
+main{max-width:40rem;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:1rem;margin-bottom:2.5rem}
+.brand{font-family:"IBM Plex Sans Arabic",sans-serif;font-weight:700;font-size:1.6rem;color:var(--ink);text-decoration:none}
+nav a{color:var(--mute);text-decoration:none;margin-inline-start:1.25rem;font-size:1rem}
+nav a:hover,a:focus-visible{color:var(--accent)}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.intro{font-size:1.35rem;margin:0 0 3rem}
+.post{display:block;padding:1.25rem 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit}
+.post h2{font-family:"IBM Plex Sans Arabic",sans-serif;font-weight:700;font-size:1.55rem;line-height:1.5;margin:0}
+.post:hover h2{color:var(--accent)}
+.meta{color:var(--mute);font-size:.95rem}
+.post p{margin:.25rem 0 0;color:var(--mute);font-size:1.05rem;line-height:1.9}
+.tag{color:var(--accent)}
+article h1{font-family:"IBM Plex Sans Arabic",sans-serif;font-weight:700;font-size:2.2rem;line-height:1.5;margin:.5rem 0 .25rem}
+article p{margin:0 0 1.4rem}
+article blockquote{margin:2rem 0;padding:0 1.25rem 0 0;border-inline-start:3px solid var(--accent);font-size:1.3rem}
+.back{display:inline-block;color:var(--accent);text-decoration:none;font-size:1rem;border:1px solid var(--line);border-radius:6px;padding:.1rem .9rem;margin-bottom:.5rem}.back:hover{border-color:var(--accent)}.tools{display:flex;gap:.6rem;margin:2rem 0 0}.btn.danger{color:var(--accent);border-color:var(--accent)}figure{margin:1.8rem 0}figure img{max-width:100%;height:auto;border-radius:6px;display:block}
+footer{margin-top:3rem;color:var(--mute);font-size:.95rem}
+button.theme{background:none;border:1px solid var(--line);color:var(--mute);border-radius:6px;padding:.1rem .6rem;font:inherit;font-size:.95rem;cursor:pointer;margin-inline-start:1.25rem}
+#fab{position:fixed;left:1.25rem;bottom:calc(1.25rem + env(safe-area-inset-bottom,0px));width:3.4rem;height:3.4rem;border-radius:50%;border:0;background:var(--accent);color:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center}
+#fab[hidden]{display:none}
+dialog{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;width:min(36rem,92vw);padding:1.25rem 1.5rem;font-family:inherit;font-size:1.1rem;line-height:1.8}
+dialog::backdrop{background:rgba(10,12,20,.55)}
+dialog h3{font-family:"IBM Plex Sans Arabic",sans-serif;margin:0 0 1rem;font-size:1.25rem}
+label{display:block;color:var(--mute);font-size:1rem}
+input,textarea{width:100%;font:inherit;font-size:1.15rem;background:transparent;color:inherit;border:1px solid var(--line);border-radius:6px;padding:.4rem .7rem;margin:.2rem 0 .9rem}
+textarea{min-height:12rem;resize:vertical}
+.hint{color:var(--mute);font-size:.95rem;margin:-.5rem 0 1rem}
+.row{display:flex;gap:.75rem;align-items:center}
+.btn{font:inherit;font-size:1.05rem;border-radius:6px;padding:.3rem 1.2rem;cursor:pointer;border:1px solid var(--line);background:none;color:var(--ink)}
+.btn.main{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+#msg{color:var(--accent);font-size:1rem}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <a class="brand" href="#home">مقالات وخواطر</a>
+  <nav><a href="#about">عن المدونة</a><button class="theme" id="theme" type="button">الوضع</button></nav>
+</header>
+<div id="view"></div>
+<footer>© <span id="y"></span> — جميع الحقوق محفوظة</footer>
+</main>
+<script id="app">
+var NAME="مقالات وخواطر",v=document.getElementById("view"),POSTS=[];
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function hid(s){var h=5381;for(var i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return "p"+(h>>>0).toString(36)}
+function readLabel(n){var a=n.toLocaleString("ar-EG");return n===1?"دقيقة واحدة":n===2?"دقيقتان":n<=10?a+" دقائق":a+" دقيقة"}
+function parse(txt){
+ return txt.replace(/\r/g,"").split(/\n-{3,}[ \t]*(?:\n|$)/).map(function(blk){
+  blk=blk.trim();if(!blk)return null;
+  var head={},lines=blk.split("\n"),i=0;
+  for(;i<lines.length;i++){var m=lines[i].match(/^(العنوان|التصنيف|التاريخ|الرابط)\s*:\s*(.*)$/);if(!m)break;head[m[1]]=m[2].trim()}
+  var body=lines.slice(i).join("\n").trim();
+  if(!head["العنوان"]||!body)return null;
+  var parts=body.split(/\n\s*\n/).map(function(s){return s.trim()}).filter(Boolean);
+  var plain=parts.filter(function(s){return s.charAt(0)!==">"&&s.charAt(0)!=="["})[0]||parts[0];
+  var sum=plain.length>120?plain.slice(0,120).replace(/\s+\S*$/,"")+"…":plain;
+  return {id:head["الرابط"]||hid(head["العنوان"]),title:head["العنوان"],tag:head["التصنيف"]||"خواطر",date:head["التاريخ"]||"",read:readLabel(Math.max(1,Math.ceil(body.split(/\s+/).length/180))),summary:sum,parts:parts};
+ }).filter(Boolean);
+}
+function part(s){
+ var m=s.match(/^\[صورة:\s*(.+?)\s*\]$/);
+ if(m)return '<figure><img src="'+esc(m[1]).replace(/"/g,"&quot;")+'" alt=""></figure>';
+ if(s.charAt(0)===">")return "<blockquote>"+esc(s.slice(1).trim())+"</blockquote>";
+ return "<p>"+esc(s).replace(/\n/g,"<br>")+"</p>";
+}
+function meta(p){return '<div class="meta"><span class="tag">'+esc(p.tag)+'</span>'+(p.date?' | '+esc(p.date):'')+' | '+p.read+'</div>'}
+function home(){
+ var h='<p class="intro">مساحة شخصية لمقالات فكرية وخواطر، أكتبها لأفهم ما أفكر فيه، وأشاركها لعلها تفتح سؤالًا عندك.</p>';
+ POSTS.forEach(function(p){h+='<a class="post" href="#'+p.id+'">'+meta(p)+'<h2>'+esc(p.title)+'</h2><p>'+esc(p.summary)+'</p></a>'});
+ v.innerHTML=h;document.title=NAME;
+}
+function about(){
+ v.innerHTML='<article><a class="back" href="#home">→ جميع المقالات</a><h1>عن المدونة</h1><p>أكتب هنا عن الأفكار التي تشغلني: المعرفة، واللغة، والقراءة، وما بينها من خواطر يومية.</p><p>أهلًا بك، وأرحب بأي نقاش هادئ.</p></article>';
+ document.title="عن المدونة";
+}
+function post(p){
+ v.innerHTML='<article><a class="back" href="#home">→ جميع المقالات</a><h1>'+esc(p.title)+'</h1>'+meta(p)+'<div style="margin-top:2rem">'+p.parts.map(part).join("")+'</div></article>';
+ document.title=p.title+" | "+NAME;
+}
+function route(){
+ var id=location.hash.slice(1);
+ if(id==="about")about();
+ else{var p=POSTS.filter(function(x){return x.id===id})[0];p?post(p):home()}
+ window.scrollTo(0,0);
+}
+window.addEventListener("hashchange",route);
+fetch("posts.txt",{cache:"no-store"}).then(function(r){if(!r.ok)throw 0;return r.text()}).then(function(t){POSTS=parse(t);route()}).catch(function(){v.innerHTML='<p class="intro">تعذر تحميل المقالات. تأكد من وجود الملف posts.txt بجانب الصفحة.</p>'});
+document.getElementById("y").textContent=new Date().getFullYear();
+document.getElementById("theme").onclick=function(){
+ var r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;
+ r.dataset.theme=dark?"light":"dark";
+};
+</script>
+
+
+</body></html>
